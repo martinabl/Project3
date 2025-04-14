@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Seznam uživatelů</title>
+</head>
+<body>
+<h1>Uživatelé</h1>
+<a href="/users/new">Přidat uživatele</a>
+<table>
+    <tr><th>ID</th><th>Jméno</th><th>Příjmení</th><th>PersonID</th><th>UUID</th><th>Akce</th></tr>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.surname}"></td>
+        <td th:text="${user.personId}"></td>
+        <td th:text="${user.uuid}"></td>
+        <td>
+            <a th:href="@{'/users/edit/' + ${user.id}}">Edit</a> |
+            <a th:href="@{'/users/delete/' + ${user.id}}">Delete</a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Upravit uživatele</title>
+  <meta charset="UTF-8">
+</head>
+<body>
+<h1>Upravit uživatele</h1>
+
+<form th:action="@{'/users/update/' + ${user.id}}" th:object="${user}" method="post">
+  <label>Jméno:</label>
+  <input type="text" th:field="*{name}" required/><br>
+
+  <label>Příjmení:</label>
+  <input type="text" th:field="*{surname}" required/><br>
+
+  <label>Pohlaví:</label>
+  <select th:field="*{gender}">
+    <option value="Muž" th:selected="${user.gender == 'Muž'}">Muž</option>
+    <option value="Žena" th:selected="${user.gender == 'Žena'}">Žena</option>
+    <option value="Jiné" th:selected="${user.gender == 'Jiné'}">Jiné</option>
+  </select><br>
+
+  <button type="submit"> </button>
+</form>
+
+<a th:href="@{/users}"> </a>
+</body>
+</html>
