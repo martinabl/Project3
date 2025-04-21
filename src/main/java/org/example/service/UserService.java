@@ -4,8 +4,12 @@ import org.example.models.User;
 import org.example.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -22,8 +26,19 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User createUser(User user) {
-        user.setPersonId(idGeneratorService.getRandomPersonId());
+    public User createUser(User user) throws IOException {
+        List<String> validIds = Files.readAllLines(Paths.get("dataPesronId.txt"));
+
+        if (!validIds.contains(user.getPersonId())) {
+            throw new IllegalArgumentException("Zadané personId není v seznamu povolených.");
+        }
+
+        if (userRepository.existsByPersonId(user.getPersonId())) {
+            throw new IllegalArgumentException("Toto personId je již použito.");
+        }
+
+        user.setUuid(UUID.randomUUID().toString());
+
         return userRepository.save(user);
     }
 
@@ -43,4 +58,7 @@ public class UserService {
             return userRepository.save(user);
         }).orElseThrow(() -> new RuntimeException("User not found"));
     }
+
 }
+
+

@@ -1,10 +1,14 @@
 package org.example.controllers;
 
 import org.example.models.User;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.example.service.UserService;
+
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/users")
@@ -29,9 +33,14 @@ public class UserController {
     }
 
     @PostMapping
-    public String createUser(@ModelAttribute User user) {
+    public String createUser(@ModelAttribute User user, Model model) {
+        try {
         userService.createUser(user);
         return "redirect:/users";
+    } catch (IOException | IllegalArgumentException e) {
+        model.addAttribute("errorMessage", e.getMessage());
+        return "error_page"; // Můžeš změnit na název své šablony
+    }
     }
 
     @GetMapping("/delete/{id}")
@@ -54,6 +63,16 @@ public class UserController {
     public String updateUser(@PathVariable Long id, @ModelAttribute User user) {
         userService.updateUser(id, user);
         return "redirect:/users";
+    }
+
+    @PostMapping
+    public ResponseEntity<?> createUser(@RequestBody User user) {
+        try {
+            User newUser = userService.createUser(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+        } catch (IllegalArgumentException | IOException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 }
 
