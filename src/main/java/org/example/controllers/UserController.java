@@ -3,15 +3,14 @@ package org.example.controllers;
 import org.example.models.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.example.service.UserService;
 
 import java.io.IOException;
+import java.util.List;
 
-@Controller
-@RequestMapping("/users")
+@RestController
+@RequestMapping("/api/v1/users")
 public class UserController {
 
     private final UserService userService;
@@ -20,50 +19,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public String listUsers(Model model) {
-        model.addAttribute("users", userService.getAllUsers());
-        return "users";
-    }
-
-    @GetMapping("/new")
-    public String showCreateForm(Model model) {
-        model.addAttribute("user", new User());
-        return "create_user";
-    }
-
-    @PostMapping
-    public String createUser(@ModelAttribute User user, Model model) {
-        try {
-        userService.createUser(user);
-        return "redirect:/users";
-    } catch (IOException | IllegalArgumentException e) {
-        model.addAttribute("errorMessage", e.getMessage());
-        return "error_page"; // Můžeš změnit na název své šablony
-    }
-    }
-
-    @GetMapping("/delete/{id}")
-    public String deleteUser(@PathVariable Long id) {
-        userService.deleteUserById(id);
-        return "redirect:/users";
-    }
-
-
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Long id, Model model) {
-        User user = userService.getUserById(id)
-                .orElseThrow(() -> new RuntimeException("Uživatel nenalezen"));
-        model.addAttribute("user", user);
-        return "edit_user";
-    }
-
-
-    @PostMapping("/update/{id}")
-    public String updateUser(@PathVariable Long id, @ModelAttribute User user) {
-        userService.updateUser(id, user);
-        return "redirect:/users";
-    }
 
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody User user) {
@@ -74,5 +29,36 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUser(@PathVariable Long id) {
+        return ResponseEntity.of(userService.getUserById(id));
+    }
+
+
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+
+    @PutMapping
+    public ResponseEntity<?> updateUser(@RequestBody User user) {
+        try {
+            return ResponseEntity.ok(userService.updateUser(user));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
 }
+
+
 

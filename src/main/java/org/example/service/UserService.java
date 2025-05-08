@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 @Service
 public class UserService {
 
@@ -50,8 +52,8 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public User updateUser(Long id, User updatedUser) {
-        return userRepository.findById(id).map(user -> {
+    public User updateUser(User updatedUser) {
+        return userRepository.findById(updatedUser.getId()).map(user -> {
             user.setName(updatedUser.getName());
             user.setSurname(updatedUser.getSurname());
             user.setGender(updatedUser.getGender());
@@ -59,6 +61,9 @@ public class UserService {
         }).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
 }
 
 
