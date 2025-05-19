@@ -2,16 +2,17 @@ package org.example.service;
 
 import org.example.models.User;
 import org.example.repositories.UserRepository;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -29,13 +30,24 @@ public class UserService {
     }
 
     public User createUser(User user) throws IOException {
-        List<String> validIds = Files.readAllLines(Paths.get("dataPersonId.txt"));
 
-        if (!validIds.contains(user.getPersonId())) {
-            throw new IllegalArgumentException("Zadané personId není v seznamu povolených.");
+        String personId = user.getPersonId();
+        if (personId == null || personId.isEmpty()) {
+            personId = idGeneratorService.getRandomPersonId();
+            user.setPersonId(personId);
+        } else {
+            ClassPathResource resource = new ClassPathResource("dataPersonId.txt");
+            List<String> validIds;
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))) {
+                validIds = reader.lines().collect(Collectors.toList());
+            }
+            if (!validIds.contains(personId)) {
+                throw new IllegalArgumentException("Zadané personId není v seznamu povolených.");
+            }
         }
 
-        if (userRepository.existsByPersonId(user.getPersonId())) {
+
+        if (userRepository.existsByPersonId(personId)) {
             throw new IllegalArgumentException("Toto personId je již použito.");
         }
 

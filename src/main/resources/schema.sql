@@ -3,5 +3,6 @@ CREATE TABLE users (
     name VARCHAR(255) NOT NULL,
     surname VARCHAR(255),
     person_id VARCHAR(12) NOT NULL UNIQUE,
+    gender VARCHAR(50),
     uuid VARCHAR(36) NOT NULL UNIQUE
 );

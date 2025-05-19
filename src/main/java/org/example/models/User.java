@@ -55,11 +55,11 @@ public class User {
     }
 
     public String getGender() {
-        return personId;
+        return gender;
     }
 
     public void setGender(String gender) {
-        this.personId = gender;
+        this.gender = gender;
     }
 
     public String getPersonId() {
