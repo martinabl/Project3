@@ -3,32 +3,28 @@
 <head>
   <title>Upravit uživatele</title>
   <meta charset="UTF-8">
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    label { display: inline-block; width: 100px; margin-bottom: 10px; }
-    input, select { padding: 5px; margin-bottom: 10px; width: 200px; }
-    button { padding: 8px 15px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
-    a { display: inline-block; margin-top: 20px; text-decoration: none; color: #0066cc; }
-  </style>
 </head>
 <body>
 <h1>Upravit uživatele</h1>
+
 <form th:action="@{'/users/update/' + ${user.id}}" th:object="${user}" method="post">
-  <input type="hidden" th:field="*{id}" />
-  <input type="hidden" th:field="*{personId}" />
-  <input type="hidden" th:field="*{uuid}" />
   <label>Jméno:</label>
-  <input type="text" th:field="*{name}" required/><br>
+  <input type="text" th:field="*{name}" required/><br><br>
+
   <label>Příjmení:</label>
-  <input type="text" th:field="*{surname}" required/><br>
+  <input type="text" th:field="*{surname}" required/><br><br>
+
   <label>Pohlaví:</label>
   <select th:field="*{gender}">
-    <option value="Muž">Muž</option>
-    <option value="Žena">Žena</option>
-    <option value="Jiné">Jiné</option>
-  </select><br>
+    <option value="Muž" th:selected="${user.gender == 'Muž'}">Muž</option>
+    <option value="Žena" th:selected="${user.gender == 'Žena'}">Žena</option>
+    <option value="Jiné" th:selected="${user.gender == 'Jiné'}">Jiné</option>
+  </select><br><br>
+
   <button type="submit">Uložit změny</button>
 </form>
+
+<br>
 <a th:href="@{/users}">Zpět na seznam uživatelů</a>
 </body>
 </html>
