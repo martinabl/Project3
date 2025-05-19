@@ -29,7 +29,7 @@ public class UserService {
     }
 
     public User createUser(User user) throws IOException {
-        List<String> validIds = Files.readAllLines(Paths.get("dataPesronId.txt"));
+        List<String> validIds = Files.readAllLines(Paths.get("dataPersonId.txt"));
 
         if (!validIds.contains(user.getPersonId())) {
             throw new IllegalArgumentException("Zadané personId není v seznamu povolených.");
