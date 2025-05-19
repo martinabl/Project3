@@ -3,14 +3,19 @@
 <head>
     <title>Vytvořit uživatele</title>
     <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        label { display: inline-block; width: 100px; margin-bottom: 10px; }
+        input, select { padding: 5px; margin-bottom: 10px; width: 200px; }
+        button { padding: 8px 15px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        a { display: inline-block; margin-top: 20px; text-decoration: none; color: #0066cc; }
+    </style>
 </head>
 <body>
 <h1>Vytvořit nového uživatele</h1>
-
 <form th:action="@{/users}" th:object="${user}" method="post">
     <label>Jméno:</label>
     <input type="text" th:field="*{name}" required/><br>
-
     <label>Příjmení:</label>
     <input type="text" th:field="*{surname}" required/><br>
 
@@ -21,9 +26,11 @@
         <option value="Jiné">Jiné</option>
     </select><br>
 
-    <button type="submit"> </button>
-</form>
+    <label>PersonID (volitelné):</label>
+    <input type="text" th:field="*{personId}"/><br>
 
-<a th:href="@{/users}"> </a>
+    <button type="submit">Vytvořit</button>
+</form>
+<a th:href="@{/users}">Zpět na seznam uživatelů</a>
 </body>
 </html>

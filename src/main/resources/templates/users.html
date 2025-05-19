@@ -2,21 +2,52 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Seznam uživatelů</title>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        th { background-color: #4CAF50; color: white; }
+        .add-button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        .action-link {
+            margin-right: 10px;
+            text-decoration: none;
+            color: #0066cc;
+        }
+    </style>
 </head>
 <body>
-<h1>Uživatelé</h1>
-<a href="/users/new">Přidat uživatele</a>
+<h1>Seznam uživatelů</h1>
+<a href="/users/new" class="add-button">Přidat uživatele</a>
 <table>
-    <tr><th>ID</th><th>Jméno</th><th>Příjmení</th><th>PersonID</th><th>UUID</th><th>Akce</th></tr>
+    <tr>
+        <th>ID</th>
+        <th>Jméno</th>
+        <th>Příjmení</th>
+        <th>Pohlaví</th>
+        <th>PersonID</th>
+        <th>UUID</th>
+        <th>Akce</th>
+    </tr>
     <tr th:each="user : ${users}">
         <td th:text="${user.id}"></td>
         <td th:text="${user.name}"></td>
         <td th:text="${user.surname}"></td>
+        <td th:text="${user.gender}"></td>
         <td th:text="${user.personId}"></td>
         <td th:text="${user.uuid}"></td>
         <td>
-            <a th:href="@{'/users/edit/' + ${user.id}}">Edit</a> |
-            <a th:href="@{'/users/delete/' + ${user.id}}">Delete</a>
+            <a th:href="@{'/users/edit/' + ${user.id}}" class="action-link">Upravit</a>
+            <a th:href="@{'/users/delete/' + ${user.id}}" class="action-link"
+               onclick="return confirm('Opravdu chcete smazat tohoto uživatele?')">Smazat</a>
         </td>
     </tr>
 </table>
